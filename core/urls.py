@@ -1,4 +1,4 @@
-from .views import LogoutAPIView, RefreshAPIView, RegisterAPIView, LoginAPIView, UserAPIView
+from .views import LogoutAPIView, RefreshAPIView, RegisterAPIView, LoginAPIView, ResetAPIView, UserAPIView
 from django.urls import path, include
 
 urlpatterns = [
@@ -7,4 +7,5 @@ urlpatterns = [
     path('user', UserAPIView.as_view()),
     path('refresh', RefreshAPIView.as_view()),
     path('logout', LogoutAPIView.as_view()),
+    path('reset', ResetAPIView.as_view()),
 ]
