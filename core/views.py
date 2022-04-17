@@ -8,6 +8,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import get_authorization_header
+from django.core.mail import send_mail
 
 from .authentication import JWTAuthentication, create_access_token, create_refresh_token, decode_refresh_token
 from .models import Reset, User, UserToken
@@ -94,13 +95,22 @@ class LogoutAPIView(APIView):
 
         return response
 
-class ResetAPIView(APIView):
+class ForgotAPIView(APIView):
     def post(self, request):
         token=''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(10))
-
+        email=request.data['email']
         Reset.objects.create(
-            email=request.data['email'],
+            email=email,
             token=token
+        )
+        
+        url='http://localhost:3000/reset/'+token
+
+        send_mail(
+            subject="Reset your password",
+            message='Click <a href="%s">here</a> to reset your password' % url,
+            from_email='from@example.com',
+            recipient_list=[email]
         )
 
         return Response({
